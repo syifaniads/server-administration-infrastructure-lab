@@ -1,0 +1,10 @@
+# Sanitized representative HAProxy configuration.
+frontend http_front
+    bind *:80
+    default_backend web_backends
+
+backend web_backends
+    balance roundrobin
+    option httpchk GET /
+    server web1 <WEB1_IP>:80 check
+    server web2 <WEB2_IP>:80 check

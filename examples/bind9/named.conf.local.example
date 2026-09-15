@@ -1,0 +1,16 @@
+// Sanitized BIND9 example derived from the DNS lab.
+zone "site1.example.test" {
+    type master;
+    file "/etc/bind/db.site1.example.test";
+};
+
+zone "site2.example.test" {
+    type master;
+    file "/etc/bind/db.site2.example.test";
+};
+
+// Use the correct reverse zone for your actual private subnet.
+zone "<REVERSE_ZONE>.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.reverse.example";
+};
