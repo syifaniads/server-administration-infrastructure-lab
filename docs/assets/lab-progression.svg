@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="780" viewBox="0 0 1500 780" role="img" aria-labelledby="title desc">
+  <title id="title">Server administration and infrastructure lab progression</title>
+  <desc id="desc">Evidence-derived map of separate hands-on labs covering Linux, identity, web, DNS, data services, Kubernetes, HAProxy, Prometheus and Grafana.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#07111f"/><stop offset="1" stop-color="#111827"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="7" stdDeviation="8" flood-opacity="0.24"/></filter><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#94a3b8"/></marker><style>.tt{font:700 34px Inter,Segoe UI,sans-serif;fill:#f8fafc}.sub{font:400 16px Inter,Segoe UI,sans-serif;fill:#94a3b8}.h{font:700 17px Inter,Segoe UI,sans-serif;fill:#f8fafc}.t{font:500 13px Inter,Segoe UI,sans-serif;fill:#cbd5e1}.sm{font:500 12px Inter,Segoe UI,sans-serif;fill:#94a3b8}.box{rx:18;filter:url(#s)}.line{stroke:#94a3b8;stroke-width:2;fill:none;marker-end:url(#a)}</style></defs>
+  <rect width="1500" height="780" fill="url(#bg)"/>
+  <text x="65" y="62" class="tt">Server Administration &amp; Infrastructure Lab</text>
+  <text x="65" y="92" class="sub">Evidence-derived progression across separate hands-on modules — not a claim that every component ran as one production stack</text>
+
+  <rect x="70" y="155" width="250" height="120" fill="#172554" stroke="#3b82f6" class="box"/><text x="120" y="196" class="h">Linux Foundations</text><text x="110" y="226" class="t">LVM · users · groups</text><text x="111" y="252" class="sm">storage + permissions</text>
+  <rect x="395" y="155" width="250" height="120" fill="#27203b" stroke="#8b5cf6" class="box"/><text x="468" y="196" class="h">Identity</text><text x="455" y="226" class="t">OpenLDAP + NSS/PAM</text><text x="457" y="252" class="sm">centralized login</text>
+  <rect x="720" y="155" width="250" height="120" fill="#17202a" stroke="#14b8a6" class="box"/><text x="788" y="196" class="h">Web + DNS</text><text x="772" y="226" class="t">Nginx/TLS + BIND9</text><text x="764" y="252" class="sm">vhosts + forward/reverse DNS</text>
+  <rect x="1045" y="155" width="320" height="120" fill="#2a1f17" stroke="#f59e0b" class="box"/><text x="1126" y="196" class="h">Data Services</text><text x="1096" y="226" class="t">MySQL replication + Redis cache</text><text x="1110" y="252" class="sm">state + measured cache effect</text>
+  <path d="M320 215 L395 215" class="line"/><path d="M645 215 L720 215" class="line"/><path d="M970 215 L1045 215" class="line"/>
+
+  <rect x="210" y="390" width="320" height="135" fill="#172554" stroke="#38bdf8" class="box"/><text x="290" y="432" class="h">Kubernetes on AWS</text><text x="267" y="462" class="t">EC2 · containerd · kubeadm</text><text x="286" y="489" class="t">Calico · 2-node cluster</text>
+  <rect x="590" y="390" width="320" height="135" fill="#2b1721" stroke="#ef4444" class="box"/><text x="682" y="432" class="h">HAProxy</text><text x="645" y="462" class="t">round-robin web backends</text><text x="656" y="489" class="t">health-checked balancing</text>
+  <rect x="970" y="390" width="320" height="135" fill="#14251f" stroke="#22c55e" class="box"/><text x="1032" y="432" class="h">Observability</text><text x="1015" y="462" class="t">Node Exporter → Prometheus</text><text x="1050" y="489" class="t">→ Grafana</text>
+  <path d="M1205 275 C1130 330 420 330 370 390" class="line"/><path d="M530 458 L590 458" class="line"/><path d="M910 458 L970 458" class="line"/>
+
+  <rect x="150" y="620" width="1200" height="95" rx="18" fill="#111827" stroke="#334155"/>
+  <text x="190" y="657" class="h">Evidence discipline</text>
+  <text x="190" y="687" class="t">Each module is documented with retained results, sanitized examples, source evidence and limitations. Cross-module arrows represent learning progression, not a single deployed production architecture.</text>
+  <text x="65" y="755" class="sm">Public examples intentionally omit historical lab addresses, credentials, private keys and student identifiers.</text>
+</svg>
