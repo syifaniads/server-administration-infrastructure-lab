@@ -13,27 +13,31 @@
 ![AWS](https://img.shields.io/badge/AWS-EC2-232F3E?logo=amazonaws&logoColor=white)
 ![Observability](https://img.shields.io/badge/Observability-Prometheus%20%2B%20Grafana-F46800)
 ![Leadership](https://img.shields.io/badge/Role-Group%20Lead-1D4ED8)
+[![Validate infrastructure examples](https://github.com/syifaniads/server-administration-infrastructure-lab/actions/workflows/validate-examples.yml/badge.svg)](https://github.com/syifaniads/server-administration-infrastructure-lab/actions/workflows/validate-examples.yml)
 
 ## Overview
 
-This repository reconstructs a 181-page final server-administration module into a recruiter-friendly engineering portfolio. The coursework progressed from Linux storage and identity fundamentals into centralized directory services, web/DNS/database administration, caching, Kubernetes on AWS, load balancing, and production-style monitoring.
+This repository reconstructs a 181-page final server-administration module into a recruiter-friendly engineering portfolio. The coursework progressed from Linux storage and identity fundamentals into centralized directory services, web/DNS/database administration, caching, Kubernetes on AWS, load balancing, and monitoring.
 
-The public repository intentionally **does not publish the raw report** because it contains student identifiers, historical lab addresses, screenshots, and environment-specific credentials. Instead, this repository keeps sanitized examples and maps every portfolio claim back to retained report evidence.
+The public repository intentionally **does not publish the raw report** because it contains student identifiers, historical lab addresses, screenshots, and environment-specific credentials. Instead, it keeps sanitized examples and maps portfolio claims back to retained evidence.
 
-> **Important scope note:** the modules were separate hands-on labs. The diagram and documentation below show the progression of skills; they do **not** claim that every component ran as one single production platform.
+> **Scope note:** these were separate hands-on modules. The visual below shows the progression of infrastructure skills; it does **not** claim that every component ran together as one production platform.
 
-## Skill progression
+<p align="center">
+  <img src="./docs/assets/lab-progression.svg" alt="Evidence-derived server administration lab progression" width="100%" />
+</p>
 
-```mermaid
-flowchart LR
-    A[Linux foundations\nLVM + users + permissions] --> B[Identity\nOpenLDAP]
-    B --> C[Web + DNS\nNginx + TLS + BIND9]
-    C --> D[Data services\nMySQL replication]
-    D --> E[Performance\nRedis cache]
-    E --> F[Containers\nKubernetes on AWS]
-    F --> G[Availability\nHAProxy]
-    G --> H[Observability\nPrometheus + Grafana]
-```
+## Senior technical review path
+
+A reviewer can inspect the implementation evidence directly instead of relying on summary claims:
+
+1. **Storage & Linux IAM:** [docs/01-storage-lvm.md](./docs/01-storage-lvm.md) and [docs/02-user-permissions.md](./docs/02-user-permissions.md).
+2. **Centralized identity:** [docs/03-openldap.md](./docs/03-openldap.md).
+3. **Web & DNS:** [docs/04-nginx-tls.md](./docs/04-nginx-tls.md), [docs/05-bind9-dns.md](./docs/05-bind9-dns.md), and sanitized configs in [`examples/nginx/`](./examples/nginx/) and [`examples/bind9/`](./examples/bind9/).
+4. **Data & caching:** [docs/06-mysql-replication.md](./docs/06-mysql-replication.md) and [docs/07-redis-caching.md](./docs/07-redis-caching.md).
+5. **Cloud orchestration & availability:** [docs/08-kubernetes-aws.md](./docs/08-kubernetes-aws.md), [`examples/kubernetes/sample-app.yaml`](./examples/kubernetes/sample-app.yaml), [docs/09-haproxy-load-balancing.md](./docs/09-haproxy-load-balancing.md), and [`examples/haproxy/haproxy.cfg.example`](./examples/haproxy/haproxy.cfg.example).
+6. **Observability:** [docs/10-prometheus-grafana.md](./docs/10-prometheus-grafana.md) and [`examples/prometheus/prometheus.yml.example`](./examples/prometheus/prometheus.yml.example).
+7. **Evidence discipline:** [RESULTS.md](./RESULTS.md), [SOURCE_EVIDENCE.md](./SOURCE_EVIDENCE.md), [docs/EVIDENCE_MAP.md](./docs/EVIDENCE_MAP.md), [LIMITATIONS.md](./LIMITATIONS.md), and [`scripts/validate_examples.py`](./scripts/validate_examples.py).
 
 ## What was actually validated
 
@@ -44,69 +48,44 @@ flowchart LR
 | OpenLDAP | Centralized OU/group/user management and LDAP client login after NSS/PAM troubleshooting | **Verified** |
 | Nginx | Two virtual hosts, HTTPS with self-signed TLS, HTTP→HTTPS redirect, gzip/static-cache tuning | **Verified** |
 | BIND9 DNS | Forward zones, reverse zone/PTR, client DNS configuration, successful `nslookup` | **Verified** |
-| MySQL | Nginx/PHP-FPM/phpMyAdmin plus asynchronous primary-replica lab; IO/SQL replication threads reported running | **Verified** |
+| MySQL | Asynchronous primary-replica lab; IO/SQL replication threads reported running | **Verified** |
 | Redis | Database access measured at ~70 ms without cache vs ~3.7 ms with Redis in the lab (~19× faster) | **Verified experiment** |
 | Kubernetes | Two-node AWS EC2 cluster, containerd, kubeadm, Calico; both nodes reached `Ready` | **Verified** |
 | HAProxy | Repeated `curl` responses alternated between two Nginx backends using round-robin | **Verified** |
 | Monitoring | Node Exporter target `UP`, Prometheus scraping, Grafana dashboard, Prometheus API queried via cURL/Python | **Verified** |
+| Public example integrity | Nginx/BIND/HAProxy/Prometheus/Kubernetes invariants + obvious secret-pattern checks | **Automated in CI** |
 
-## Representative architecture map
+## Technical highlights
 
-```mermaid
-flowchart TB
-    subgraph Linux[Linux administration labs]
-      LVM[LVM storage]
-      IAM[Users / groups / permissions]
-      LDAP[OpenLDAP + LDAP client]
-    end
+### Linux storage and identity
+The storage lab added a new virtual disk, converted it into an LVM Physical Volume, extended the existing Volume Group and Logical Volume, resized the filesystem, and verified the new `/home` capacity. The Linux IAM lab covered users, groups, sudo access, ownership, and permissions. OpenLDAP then extended identity management across hosts through directory-backed accounts and NSS/PAM integration.
 
-    subgraph Services[Application & network services]
-      NGINX[Nginx\nVirtual hosts + TLS]
-      DNS[BIND9\nForward + reverse DNS]
-      MYSQL[(MySQL)]
-      REDIS[(Redis cache)]
-    end
+### Web and DNS services
+Nginx hosted multiple virtual hosts, redirected HTTP to HTTPS, referenced TLS certificate/key files, and applied basic static-cache behavior. BIND9 configured two forward zones and a reverse-zone pattern. The public examples retain these design invariants while omitting historical lab values.
 
-    subgraph Infra[Infrastructure labs]
-      K8S[Kubernetes on AWS EC2\n1 control-plane + 1 worker]
-      HAP[HAProxy\nround-robin]
-    end
+### Database replication and caching
+The MySQL module exercised asynchronous primary-replica behavior and retained evidence that both replication threads were running. The Redis module measured approximately **0.07 s** for a direct database read and **0.0037 s** for the Redis-backed path in that specific lab, roughly **19× faster**. This is retained experiment data, not a universal Redis benchmark.
 
-    subgraph Obs[Observability lab]
-      NODE[Node Exporter] --> PROM[Prometheus] --> GRAF[Grafana]
-    end
+### Kubernetes on AWS EC2
+A two-node cluster was built using EC2, containerd, kubeadm/kubelet/kubectl, and Calico. Troubleshooting covered EC2 IP selection, package/repository setup, security-group access to the API server, swap configuration, and container runtime integration. The sanitized Kubernetes example uses a two-replica Deployment plus a ClusterIP Service to demonstrate workload/service structure without exposing historical infrastructure identifiers.
 
-    LDAP --> Services
-    NGINX --> MYSQL
-    MYSQL --> REDIS
-    Services --> Infra
-    Infra --> Obs
-```
+### Load balancing and observability
+HAProxy used `balance roundrobin`, two health-checked web backends, and repeated requests to demonstrate alternating responses. The observability lab used Node Exporter → Prometheus → Grafana, with Prometheus scraping on a 15-second interval in the public example and Node Exporter represented on port `9100`.
 
-## Highlights a senior reviewer can discuss
+## Automated artifact validation
 
-### 1. Storage expansion with LVM
-The lab added a new virtual disk, converted it into a Physical Volume, extended the existing Volume Group, grew the Logical Volume backing `/home`, resized the filesystem, and verified the new capacity with `df -h`.
+[`scripts/validate_examples.py`](./scripts/validate_examples.py) runs in GitHub Actions on every push and pull request. It checks that the public artifacts remain aligned with the documented lab design:
 
-### 2. Centralized identity with LDAP
-OpenLDAP and LDAP Account Manager were configured with organizational units and Unix accounts. A client machine was then connected through NSS/PAM. A failed LDAP-login path was debugged by correcting the client integration and restarting the relevant name-service layer.
+- Nginx still has HTTP→HTTPS redirection, a TLS listener, and certificate references;
+- BIND9 still contains two forward-zone examples and reverse-zone intent;
+- HAProxy still uses round-robin, two backends, and health checks;
+- Prometheus still retains the Node Exporter target pattern;
+- Kubernetes still contains a two-replica Deployment and ClusterIP Service;
+- obvious literal credential-assignment patterns are rejected under `examples/`.
 
-### 3. Web and DNS administration
-Nginx hosted multiple virtual hosts on one server, added a self-signed TLS certificate, redirected HTTP to HTTPS, and applied basic static-cache/gzip/worker tuning. BIND9 was configured with two forward zones and a reverse zone, and clients successfully resolved the lab domains.
+These are **repository-integrity checks**, not substitutes for live service validation. CI does not claim that Nginx, BIND, MySQL replication, Kubernetes, HAProxy, or Prometheus are running in a production environment.
 
-### 4. Database replication
-The database module covered MySQL administration via phpMyAdmin and an asynchronous replication exercise. The retained evidence records `Slave_IO_Running = Yes` and `Slave_SQL_Running = Yes`, followed by changes on the primary appearing on the replica.
-
-### 5. Measured Redis caching effect
-The report records approximately **0.07 s** for a direct database read and **0.0037 s** for the Redis-backed path in that experiment—roughly **19× faster**. This is a lab measurement, not a universal Redis benchmark.
-
-### 6. Kubernetes on AWS EC2
-A two-node Kubernetes cluster was built using EC2, containerd, kubeadm/kubelet/kubectl, and Calico. Troubleshooting included EC2 IP detection, containerd installation, repository/GPG changes, security-group rules for the API server, and swap configuration. Both nodes eventually reached `Ready`.
-
-### 7. Load balancing and observability
-HAProxy was configured in front of two Nginx servers and validated by alternating backend responses under repeated `curl`. The monitoring lab then used Node Exporter → Prometheus → Grafana, with Node Exporter shown `UP` in Prometheus and metrics also accessed programmatically.
-
-## Team
+## Team and attribution
 
 | Member | Portfolio attribution |
 |---|---|
@@ -128,19 +107,6 @@ This was collaborative coursework. The repository does **not** claim that Syifan
 - [Portfolio / CV copy](PORTFOLIO.md)
 - [Detailed evidence matrix](docs/EVIDENCE_MAP.md)
 
-### Module notes
-
-1. [Storage with LVM](docs/01-storage-lvm.md)
-2. [Linux users & permissions](docs/02-user-permissions.md)
-3. [OpenLDAP centralized identity](docs/03-openldap.md)
-4. [Nginx virtual hosts & TLS](docs/04-nginx-tls.md)
-5. [BIND9 DNS](docs/05-bind9-dns.md)
-6. [MySQL administration & replication](docs/06-mysql-replication.md)
-7. [Redis caching](docs/07-redis-caching.md)
-8. [Kubernetes on AWS](docs/08-kubernetes-aws.md)
-9. [HAProxy load balancing](docs/09-haproxy-load-balancing.md)
-10. [Prometheus & Grafana](docs/10-prometheus-grafana.md)
-
 ## Public-repository policy
 
-No raw passwords, private keys, cloud credentials, student IDs, or historical deployment secrets are intentionally stored here. All example configuration values are placeholders.
+No raw passwords, private keys, cloud credentials, student IDs, or historical deployment secrets are intentionally stored here. All public examples are sanitized and should be treated as representative configuration artifacts rather than historical production backups.
